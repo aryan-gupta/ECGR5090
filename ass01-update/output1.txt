@@ -1,0 +1,146 @@
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 25¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 50¢
+Insert coins (q to quit, f to finish):: f
+Select Product:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+
+Your deposit amount: 50¢
+Selection (q to quit):: Soda
+	Vending Soda
+Your return change is follows:
+0 quarter(s)
+0 dime(s)
+1 nickel(s)
+0 pennies(s)
+
+
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 25¢
+Insert coins (q to quit, f to finish):: f
+Select Product:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+
+Your deposit amount: 25¢
+Selection (q to quit):: Coke
+	Vending Coke
+Your return change is follows:
+0 quarter(s)
+0 dime(s)
+0 nickel(s)
+0 pennies(s)
+
+
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: 5
+Nickel deposited. Total: 5¢
+Insert coins (q to quit, f to finish):: 3
+Invalid types of coin. Valid options are 1, 5, 10, 25, penny, nickel, dime, quarter
+Insert coins (q to quit, f to finish):: jelly
+Invalid types of coin. Valid options are 1, 5, 10, 25, penny, nickel, dime, quarter
+Insert coins (q to quit, f to finish):: quarter
+Quarter deposited. Total: 30¢
+Insert coins (q to quit, f to finish):: nickel
+Nickel deposited. Total: 35¢
+Insert coins (q to quit, f to finish):: f
+Select Product:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+
+Your deposit amount: 35¢
+Selection (q to quit):: Pepsi
+	Vending Pepsi
+Your return change is follows:
+0 quarter(s)
+0 dime(s)
+0 nickel(s)
+0 pennies(s)
+
+
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 25¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 50¢
+Insert coins (q to quit, f to finish)::
+Select Product:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+
+Your deposit amount: 50¢
+Selection (q to quit):: soda
+Product is sold out or is unavailable
+Your return change is follows:
+2 quarter(s)
+0 dime(s)
+0 nickel(s)
+0 pennies(s)
+
+
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: nickel
+Nickel deposited. Total: 5¢
+Insert coins (q to quit, f to finish):: f
+Select Product:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+
+Your deposit amount: 5¢
+Selection (q to quit):: Coke
+Need more coins for that product
+Your return change is follows:
+0 quarter(s)
+0 dime(s)
+1 nickel(s)
+0 pennies(s)
+
+
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: 10
+Dime deposited. Total: 10¢
+Insert coins (q to quit, f to finish):: 10
+Dime deposited. Total: 20¢
+Insert coins (q to quit, f to finish):: q
+
+Your deposit amount: 20¢
+Your return change is follows:
+0 quarter(s)
+2 dime(s)
+0 nickel(s)
+0 pennies(s)
+
+

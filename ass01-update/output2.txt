@@ -1,0 +1,49 @@
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 25¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 50¢
+Insert coins (q to quit, f to finish):: f
+Select Product:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+
+Your deposit amount: 50¢
+Selection (q to quit):: Soda
+Not enough coins in the machine to dispence this product
+Your return change is follows:
+2 quarter(s)
+0 dime(s)
+0 nickel(s)
+0 pennies(s)
+
+
+Welcome to Aryan's Vending Machine
+Products you can buy:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 25¢
+Insert coins (q to quit, f to finish):: 25
+Quarter deposited. Total: 50¢
+Insert coins (q to quit, f to finish):: f
+Select Product:
+	Coke  25¢
+	Pepsi 35¢
+	Soda  45¢
+
+Your deposit amount: 50¢
+Selection (q to quit):: q
+Your return change is follows:
+2 quarter(s)
+0 dime(s)
+0 nickel(s)
+0 pennies(s)
+
+
