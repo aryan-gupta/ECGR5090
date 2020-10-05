@@ -9,69 +9,75 @@ public final class BikesUtil {
             return null;
         }
 
-        for (int argidx = 0; argidx < args.length - 1; ++argidx) {
+        for (int argidx = 0; argidx < args.length; ++argidx) {
             if (args[argidx].charAt(0) != '-') {
                 System.out.println("Invalid argument: " + args[argidx]);
                 return null;
             }
 
-            switch (args[argidx].toLowerCase()) {
-                case "-type":
-                    attributes.type = args[++argidx];
-                    continue;
+            // if we are on the last argument and its a -XXX then pasrse it
+            // as a sort argument otherwise parse it as a normal argument with
+            // a value
+            if (argidx == (args.length - 1)) {
+                switch (args[args.length - 1].toLowerCase()) {
+                    case "-type":
+                        attributes.sort = TableAttributes.ATTRIBUTES.TYPE;
+                        break;
 
-                case "-gear":
-                    attributes.gears = Integer.parseInt(args[++argidx]);
-                    continue;
-                    
-                case "-wheelbase":
-                    attributes.wheelBase = Integer.parseInt(args[++argidx]);
-                    continue;
-                    
-                case "-height":
-                    attributes.height = Integer.parseInt(args[++argidx]);
-                    continue;
-                    
-                case "-color":
-                    attributes.color = args[++argidx];
-                    continue;
-                    
-                case "-material":
-                    attributes.material = args[++argidx];
-                    continue;
-                    
-                default:
-                    return null;
+                    case "-gear":
+                        attributes.sort = TableAttributes.ATTRIBUTES.GEARS;
+                        break;
+
+                    case "-wheelbase":
+                        attributes.sort = TableAttributes.ATTRIBUTES.WHEEL_BASE;
+                        break;
+
+                    case "-height":
+                        attributes.sort = TableAttributes.ATTRIBUTES.HEIGHT;
+                        break;
+
+                    case "-color":
+                        attributes.sort = TableAttributes.ATTRIBUTES.COLOR;
+                        break;
+
+                    case "-material":
+                        attributes.sort = TableAttributes.ATTRIBUTES.MATERIAL;
+                        break;
+
+                    default:
+                        return null;
+                }
+            } else {
+
+                switch (args[argidx].toLowerCase()) {
+                    case "-type":
+                        attributes.type = args[++argidx];
+                        continue;
+
+                    case "-gear":
+                        attributes.gears = Integer.parseInt(args[++argidx]);
+                        continue;
+                        
+                    case "-wheelbase":
+                        attributes.wheelBase = Integer.parseInt(args[++argidx]);
+                        continue;
+                        
+                    case "-height":
+                        attributes.height = Integer.parseInt(args[++argidx]);
+                        continue;
+                        
+                    case "-color":
+                        attributes.color = args[++argidx];
+                        continue;
+                        
+                    case "-material":
+                        attributes.material = args[++argidx];
+                        continue;
+                        
+                    default:
+                        return null;
+                }
             }
-        }
-
-        switch (args[args.length - 1].toLowerCase()) {
-            case "-type":
-                attributes.sort = TableAttributes.ATTRIBUTES.TYPE;
-                break;
-
-            case "-gear":
-                attributes.sort = TableAttributes.ATTRIBUTES.GEARS;
-                break;
-
-            case "-wheelbase":
-                attributes.sort = TableAttributes.ATTRIBUTES.WHEEL_BASE;
-                break;
-
-            case "-height":
-                attributes.sort = TableAttributes.ATTRIBUTES.HEIGHT;
-                break;
-
-            case "-color":
-                attributes.sort = TableAttributes.ATTRIBUTES.COLOR;
-                break;
-
-            case "-material":
-                attributes.sort = TableAttributes.ATTRIBUTES.MATERIAL;
-                break;
-
-            default:
-                return null;
         }
 
         return attributes;
