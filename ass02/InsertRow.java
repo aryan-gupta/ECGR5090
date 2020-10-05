@@ -13,30 +13,23 @@ public final class InsertRow extends SQLOperation {
     }
 
     public InsertRow run(TableAttributes query) {
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
 
         try {
-            StringBuilder querystr = new StringBuilder();
-            querystr.append("INSERT INTO Attributes (type,num_gears,wheel_base,height,color,material) VALUES (");
-            
-            if (query.type != null)
-                querystr.append("'" + query.type + "',");
-            if (query.gears != -1)
-                querystr.append("" + query.gears + ",");
-            if (query.wheelBase != -1)
-                querystr.append("" + query.wheelBase + ",");
-            if (query.height != -1)
-                querystr.append("" + query.height + ",");
-            if (query.color != null)
-                querystr.append("'" + query.color + "',");
-            if (query.material != null)
-                querystr.append("'" + query.material + "')");
+            statement = connect.prepareStatement("INSERT INTO Attributes " + 
+                        "(type,num_gears,wheel_base,height,color,material) " + 
+                        "VALUES (?,?,?,?,?,?)"
+            );
 
-            statement = super.connect.createStatement();
-            // Result set get the result of the SQL query
-            System.out.println(querystr.toString());
-            statement.executeUpdate(querystr.toString());
+            statement.setString(1, query.type);
+            statement.setInt   (2, query.gears);
+            statement.setInt   (3, query.wheelBase);
+            statement.setInt   (4, query.height);
+            statement.setString(5, query.color);
+            statement.setString(6, query.material);
+
+            statement.executeUpdate();
 
             (new SearchTable(super.connect)).run(query);
 
