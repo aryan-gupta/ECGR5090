@@ -6,12 +6,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
-
+/// A class used to insert and add rows to the database
 public final class InsertRow extends SQLOperation {
+    /// A contructor to create a new connection to the database
+    /// Directly calls respective super class constructor
+    /// @param host The host or IP of the machine to connect to
+    /// @param passwd The password of the database
     public InsertRow(String host, String passwd) throws SQLException {
         super(host, passwd);
     }
 
+    /// Runs the insert/search query using ths supplied attribute parameter
+    /// and then output it to stdout
+    /// @note this function supports chaining, because the original
+    ///       impl had a seperate print meathod. Currently unused
+    /// @note SQL injection protection is impl using java's built-in
+    ///       PreparedStatement class
+    /// @param query The attributes to search for and sort key
+    /// @return this for chaining
     public InsertRow run(TableAttributes query) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;

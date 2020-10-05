@@ -1,5 +1,8 @@
 
-
+/// A simple POD class for holding the table attributes
+/// so it can easily be passed around as function parameters
+/// Also holds an enum for knowing what key to sort by during
+/// searching. See database schema for more info
 public final class TableAttributes {
     public enum ATTRIBUTES {
         TYPE,

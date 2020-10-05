@@ -6,15 +6,31 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
+/// A class used to search and sort queries from the database
 public final class SearchTable extends SQLOperation {
+    /// A protected constructor used for converting between the 3 operations
+    /// @note Not fully tested so may need more work
+    /// @param c The connection from the other class to copy
     protected SearchTable(Connection c) {
         super(c);
     }
 
+    /// A contructor to create a new connection to the database
+    /// Directly calls respective super class constructor
+    /// @param host The host or IP of the machine to connect to
+    /// @param passwd The password of the database
     public SearchTable(String host, String passwd) throws SQLException {
         super(host, passwd);
     }
 
+    /// Runs the search query using ths supplied attribute parameter
+    /// and then output it to stdout
+    /// @note this function supports chaining, because the original
+    ///       impl had a seperate print meathod. Currently unused
+    /// @note SQL injection protection is not impl in this function
+    ///       and relies on argument parsing valid set checking
+    /// @param query The attributes to search for and sort key
+    /// @return this for chaining
     public SearchTable run(TableAttributes query) {
         Statement statement = null;
         ResultSet resultSet = null;

@@ -1,5 +1,7 @@
 import java.sql.SQLException;
 
+/// A simple class that runs through all three operations and
+/// tests them together
 public final class TestMyBicycles {
     public static void main(String[] args) throws SQLException {
         String hostip = BikesUtil.getHost();

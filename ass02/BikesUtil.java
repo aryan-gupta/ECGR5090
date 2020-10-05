@@ -2,7 +2,18 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.Arrays;
 
+/// A simple utility class with various static functions
+/// that help the program at various points. See each member
+/// for more info
 public final class BikesUtil {
+    /// A function that parses through the command line arguments
+    /// This function is here because it is used by all 4 commands
+    /// that the user can run
+    ///
+    /// @note this function will set any unknown attributes to null,
+    ///       -1, or MASK
+    /// @param args The command line arguments
+    /// @return The attributes parsed from the CLI arguments
     public static TableAttributes parseArgs(String[] args) {
         TableAttributes attributes = new TableAttributes();
 
@@ -109,6 +120,10 @@ public final class BikesUtil {
         return attributes;
     }
 
+    /// A utility function to return the contents of the hostip file
+    /// @todo parameterize this to reduce code redundancy
+    /// @return The contents of the file `./tmp-db-ip` trimed for
+    ///         leading and following whitespace
     public static String getHost() {
         try {
             return Files.readString(Path.of("./tmp-db-ip")).trim();
@@ -120,6 +135,11 @@ public final class BikesUtil {
         return null;
     }
 
+    /// A utility function to return the contents of the database
+    /// password file
+    /// @todo parameterize this to reduce code redundancy
+    /// @return The contents of the file `./db-root-passwd` trimed for
+    ///         leading and following whitespace
     public static String getPasswd() {
         try {
             return Files.readString(Path.of("./db-root-passwd")).trim();

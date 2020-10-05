@@ -1,8 +1,11 @@
 import java.sql.SQLException;
 
-
+/// A simple runner that parses through the command line
+/// arguments and removes items from the database using the
+/// arguments
 public final class RemoveBikes {
-        private static void printHowTo() {
+    /// Print the how to run this command string
+    private static void printHowTo() {
         java.io.PrintStream out = java.lang.System.out;
         out.println("java -cp .:/usr/share/java/mariadb-jdbc/mariadb-java-client-2.7.0.jar RemoveBikes -type mountain_bike -gear 5 -wheelbase 36 -height 2 -color blue -material steel");
         throw new Error("Show me StackTrace");
