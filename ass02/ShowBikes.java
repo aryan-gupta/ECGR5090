@@ -1,7 +1,3 @@
-// import java.lang.Integer;
-// import java.lang.System;
-import java.nio.file.Path;
-import java.nio.file.Files;
 import java.sql.SQLException;
 
 public final class ShowBikes {
@@ -12,19 +8,13 @@ public final class ShowBikes {
     }
 
     public static void main(String[] args) {
-        TableAttributes attributes = BikesCLI.parseArgs(args);
+        TableAttributes attributes = BikesUtil.parseArgs(args);
         if (attributes == null) {
             printHowTo();
         }
 
-        String hostip, passwd;
-        try {
-            hostip = Files.readString(Path.of("./tmp-db-ip")).trim();
-            passwd = Files.readString(Path.of("./db-root-passwd")).trim();
-        } catch (java.io.IOException e) {
-            System.out.println(e.getMessage());
-            return;
-        }
+        String hostip = BikesUtil.getHost();
+        String passwd = BikesUtil.getPasswd();
 
         System.out.println(hostip + "  " + passwd);
 

@@ -1,6 +1,7 @@
+import java.nio.file.Path;
+import java.nio.file.Files;
 
-
-public final class BikesCLI {
+public final class BikesUtil {
     public static TableAttributes parseArgs(String[] args) {
         TableAttributes attributes = new TableAttributes();
 
@@ -74,5 +75,27 @@ public final class BikesCLI {
         }
 
         return attributes;
+    }
+
+    public static String getHost() {
+        try {
+            return Files.readString(Path.of("./tmp-db-ip")).trim();
+        } catch (java.io.IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
+    }
+
+    public static String getPasswd() {
+        try {
+            return Files.readString(Path.of("./db-root-passwd")).trim();
+        } catch (java.io.IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
     }
 }
