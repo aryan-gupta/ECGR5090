@@ -67,9 +67,10 @@ public final class SearchTable extends SQLOperation {
                     break;
             }
 
-            statement = super.connect.createStatement();
+            // System.out.println(querystr.toString());
+            
             // Result set get the result of the SQL query
-            System.out.println(querystr.toString());
+            statement = super.connect.createStatement();
             resultSet = statement.executeQuery(querystr.toString());
             
             super.writeResultSet(System.out, resultSet);

@@ -16,7 +16,7 @@ public final class AddBikes {
         String hostip = BikesUtil.getHost();
         String passwd = BikesUtil.getPasswd();
 
-        System.out.println(hostip + "  " + passwd);
+        // System.out.println(hostip + "  " + passwd);
 
         InsertRow ir;
         try {

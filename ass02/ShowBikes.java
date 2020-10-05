@@ -16,7 +16,7 @@ public final class ShowBikes {
         String hostip = BikesUtil.getHost();
         String passwd = BikesUtil.getPasswd();
 
-        System.out.println(hostip + "  " + passwd);
+        // System.out.println(hostip + "  " + passwd);
 
         SearchTable st;
         try {

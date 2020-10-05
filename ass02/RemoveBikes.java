@@ -17,7 +17,7 @@ public final class RemoveBikes {
         String hostip = BikesUtil.getHost();
         String passwd = BikesUtil.getPasswd();
 
-        System.out.println(hostip + "  " + passwd);
+        // System.out.println(hostip + "  " + passwd);
 
         DeleteRow dr;
         try {

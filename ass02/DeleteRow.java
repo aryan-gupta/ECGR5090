@@ -39,7 +39,7 @@ public final class DeleteRow extends SQLOperation {
             if (querystr.substring(querystr.length() - 4).equals("AND "))
                 querystr.delete(querystr.length() - 5, querystr.length());
 
-            System.out.println(querystr.toString());
+            // System.out.println(querystr.toString());
 
             // Result set get the result of the SQL query
             statement = super.connect.createStatement();
