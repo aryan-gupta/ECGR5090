@@ -1,0 +1,3 @@
+mountain_bike | 5 | 36 | 2 | blue | carbon
+mountain_bike | 5 | 36 | 2 | blue | steel
+mountain_bike | 5 | 36 | 2 | blue | aluminium

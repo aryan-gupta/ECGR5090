@@ -1,0 +1,52 @@
+Search for bicycles
+race_bike | 6 | 36 | 1 | black | carbon
+race_bike | 6 | 60 | 1 | black | carbon
+race_bike | 6 | 42 | 1 | black | carbon
+race_bike | 6 | 54 | 1 | black | carbon
+race_bike | 6 | 48 | 1 | black | carbon
+race_bike | 6 | 60 | 2 | black | carbon
+race_bike | 6 | 54 | 2 | black | carbon
+race_bike | 6 | 42 | 2 | black | carbon
+race_bike | 6 | 48 | 2 | black | carbon
+race_bike | 6 | 36 | 2 | black | carbon
+race_bike | 6 | 48 | 3 | black | carbon
+race_bike | 6 | 42 | 3 | black | carbon
+race_bike | 6 | 60 | 3 | black | carbon
+race_bike | 6 | 54 | 3 | black | carbon
+race_bike | 6 | 36 | 3 | black | carbon
+race_bike | 6 | 60 | 4 | black | carbon
+race_bike | 6 | 54 | 4 | black | carbon
+race_bike | 6 | 36 | 4 | black | carbon
+race_bike | 6 | 42 | 4 | black | carbon
+race_bike | 6 | 48 | 4 | black | carbon
+
+Insert a bicycle
+race_bike | 6 | 42 | 2 | black | carbon
+race_bike | 6 | 42 | 2 | black | carbon
+
+Delete all bicycle
+
+Re-add one bicycle
+race_bike | 6 | 42 | 2 | black | carbon
+
+Search Bicycles again
+race_bike | 6 | 36 | 1 | black | carbon
+race_bike | 6 | 36 | 2 | black | carbon
+race_bike | 6 | 36 | 3 | black | carbon
+race_bike | 6 | 36 | 4 | black | carbon
+race_bike | 6 | 42 | 2 | black | carbon
+race_bike | 6 | 42 | 4 | black | carbon
+race_bike | 6 | 42 | 3 | black | carbon
+race_bike | 6 | 42 | 1 | black | carbon
+race_bike | 6 | 48 | 4 | black | carbon
+race_bike | 6 | 48 | 3 | black | carbon
+race_bike | 6 | 48 | 2 | black | carbon
+race_bike | 6 | 48 | 1 | black | carbon
+race_bike | 6 | 54 | 3 | black | carbon
+race_bike | 6 | 54 | 4 | black | carbon
+race_bike | 6 | 54 | 2 | black | carbon
+race_bike | 6 | 54 | 1 | black | carbon
+race_bike | 6 | 60 | 2 | black | carbon
+race_bike | 6 | 60 | 3 | black | carbon
+race_bike | 6 | 60 | 4 | black | carbon
+race_bike | 6 | 60 | 1 | black | carbon

@@ -1,0 +1,1 @@
+mountain_bike | 5 | 36 | 2 | blue | steel
