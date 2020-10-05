@@ -3,7 +3,7 @@ import java.sql.SQLException;
 public final class ShowBikes {
     private static void printHowTo() {
         java.io.PrintStream out = java.lang.System.out;
-        out.println("ShowBikes –type mountain_bike –gear 5 –wheelbase");
+        out.println("java -cp .:/usr/share/java/mariadb-jdbc/mariadb-java-client-2.7.0.jar ShowBikes -type mountain_bike -gear 5 -wheelbase");
         throw new Error("Show me StackTrace");
     }
 
