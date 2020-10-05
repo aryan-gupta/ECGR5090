@@ -45,12 +45,12 @@ cursor = db.cursor()
 cursor.execute("CREATE DATABASE Bicycles")
 cursor.execute("USE Bicycles")
 cursor.execute("""CREATE TABLE Attributes (
-    type ENUM("mountain_bike", "race_bike", "street_bike"),
-    num_gears INTEGER,
-    wheel_base INTEGER,
-    height INTEGER,
-    color ENUM("steel", "red", "blue", "black"),
-    material ENUM("carbon", "steel", "aluminium")
+    type ENUM("mountain_bike", "race_bike", "street_bike") NOT NULL,
+    num_gears INTEGER NOT NULL,
+    wheel_base INTEGER NOT NULL,
+    height INTEGER NOT NULL,
+    color ENUM("steel", "red", "blue", "black") NOT NULL,
+    material ENUM("carbon", "steel", "aluminium") NOT NULL
 )""")
 
 recurse_options(cursor, 0, [0] * len(ATTRIBUTES))
