@@ -9,10 +9,10 @@ import java.io.PrintStream;
 
 
 public class SQLOperation {
-    protected Connection connect;
+    protected Connection mConnect;
 
     protected SQLOperation(Connection c) {
-        connect = c;
+        mConnect = c;
     }
 
     public SQLOperation(String host, String passwd) throws SQLException {
@@ -29,7 +29,7 @@ public class SQLOperation {
         // https://mariadb.com/kb/en/about-mariadb-connector-j/
         // https://wiki.archlinux.org/index.php/JDBC_and_MySQL
         /// @note Need to install driver with `yay -S mariadb-jdbc`
-        connect = DriverManager.getConnection("jdbc:mariadb://" + host + ":3306/Bicycles?user=root&password=" + passwd);
+        mConnect = DriverManager.getConnection("jdbc:mariadb://" + host + ":3306/Bicycles?user=root&password=" + passwd);
     }
 
     protected static void writeResultSet(PrintStream out, ResultSet resultSet) throws SQLException {
