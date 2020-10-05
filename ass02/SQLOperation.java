@@ -18,12 +18,12 @@ public class SQLOperation {
     public SQLOperation(String host, String passwd) throws SQLException {
 
         // This will load the MySQL driver, each DB has its own driver
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch(Exception e) {
-            System.out.println("Error with loading driver: " + e.getMessage());
-            e.printStackTrace();
-        }
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // } catch(Exception e) {
+        //     System.out.println("Error with loading driver: " + e.getMessage());
+        //     e.printStackTrace();
+        // }
 
         // Setup the connection with the DB
         // https://mariadb.com/kb/en/about-mariadb-connector-j/
