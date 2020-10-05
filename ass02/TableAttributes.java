@@ -8,6 +8,8 @@ public final class TableAttributes {
         HEIGHT,
         COLOR,
         MATERIAL,
+
+        MASK
     }
 
     public String type = null;
@@ -17,5 +19,5 @@ public final class TableAttributes {
     public int wheelBase = -1;
     public int height = -1;
 
-    public ATTRIBUTES sort;
+    public ATTRIBUTES sort = ATTRIBUTES.MASK;
 }
