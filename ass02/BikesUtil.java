@@ -1,5 +1,6 @@
 import java.nio.file.Path;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 public final class BikesUtil {
     public static TableAttributes parseArgs(String[] args) {
@@ -78,6 +79,25 @@ public final class BikesUtil {
                         return null;
                 }
             }
+        }
+
+        // There will be no sql injection on my watch
+        String[] validTypes = { "mountain_bike", "race_bike", "street_bike" };
+        if (Arrays.binarySearch(validTypes, attributes.type) < 0) {
+            System.out.println("Invalid type: " + attributes.type);
+            System.exit(1);
+        }
+
+        String[] validColors = { "black", "blue", "red", "steel" };
+        if (Arrays.binarySearch(validColors, attributes.color) < 0) {
+            System.out.println("Invalid color: " + attributes.color);
+            System.exit(1);
+        }
+
+        String[] validMaterials = { "aluminium", "carbon", "steel" };
+        if (Arrays.binarySearch(validMaterials, attributes.material) < 0) {
+            System.out.println("Invalid material: " + attributes.material);
+            System.exit(1);
         }
 
         return attributes;
