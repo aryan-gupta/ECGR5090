@@ -13,13 +13,13 @@ import java.io.PrintStream;
 /// on-the-fly
 public class SQLOperation {
     /// A connection to the database
-    protected Connection mConnect;
+    protected Connection connect;
 
     /// A protected constructor used for converting between the 3 operations
     /// @note Not fully tested so may need more work
     /// @param c The connection from the other class to copy
     protected SQLOperation(Connection c) {
-        mConnect = c;
+        connect = c;
     }
 
     /// A contructor to create a new connection to the database
@@ -44,7 +44,7 @@ public class SQLOperation {
         // https://mariadb.com/kb/en/about-mariadb-connector-j/
         // https://wiki.archlinux.org/index.php/JDBC_and_MySQL
         /// @note Need to install driver with `yay -S mariadb-jdbc`
-        mConnect = DriverManager.getConnection("jdbc:mariadb://" + host + ":3306/Bicycles?user=root&password=" + passwd);
+        connect = DriverManager.getConnection("jdbc:mariadb://" + host + ":3306/Bicycles?user=root&password=" + passwd);
     }
 
     /// A static function that writes the result set returned from a query to the output
