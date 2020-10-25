@@ -1,4 +1,4 @@
-package edu.uncc.sense49.ui.gallery;
+package edu.uncc.sense49.ui.alerts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import edu.uncc.sense49.R;
 
-public class GalleryFragment extends Fragment {
+public class AlertsFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private AlertsViewModel alertsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        alertsViewModel =
+                new ViewModelProvider(this).get(AlertsViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_alerts, container, false);
+        final TextView textView = root.findViewById(R.id.text_alert);
+        alertsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
