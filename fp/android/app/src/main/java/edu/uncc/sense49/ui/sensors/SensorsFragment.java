@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,18 +20,25 @@ public class SensorsFragment extends Fragment {
 
     private SensorsViewModel sensorsViewModel;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        sensorsViewModel =
-                new ViewModelProvider(this).get(SensorsViewModel.class);
+        //super.onCreateView(inflater, container, savedInstanceState);
+
         View root = inflater.inflate(R.layout.fragment_sensors, container, false);
-        final TextView textView = root.findViewById(R.id.text_sensors);
-        sensorsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+        String[] mobileArray = {"Android","IPhone","WindowsMobile","Blackberry",
+                "WebOS","Ubuntu","Windows7","Max OS X"};
+        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), R.layout.sensors_listview, mobileArray);
+
+        ListView listView = (ListView) root.findViewById(R.id.sensors_sensor_list);
+        listView.setAdapter(adapter);
+
         return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 }
