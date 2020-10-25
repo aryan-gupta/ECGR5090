@@ -10,12 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.49erSense">
         <activity
+            android:name=".MainNavDrawerActivity"
+            android:label="@string/title_activity_main_nav_drawer"
+            android:theme="@style/Theme.49erSense.NoActionBar"></activity>
+        <activity android:name=".MainLoginPageActivity"
+            android:theme="@style/Theme.49erSense.NoActionBar" />
+        <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.49erSense.NoActionBar">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
