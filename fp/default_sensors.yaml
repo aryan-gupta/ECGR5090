@@ -1,0 +1,117 @@
+---
+- type   : "system"
+  name   : "Security System"
+  number : 1
+  state  : 0 
+- type   : "garage_door"
+  name   : "1-Car Garage Door"
+  number : 1
+  state  : 0 
+- type   : "garage_door"
+  name   : "2-Car Garage Door"
+  number : 2
+  state  : 0 
+- type   : "thermostat_mode"
+  name   : "Main Floor Thermostat Mode"
+  number : 1
+  state  : 0 
+- type   : "thermostat_mode"
+  name   : "Upstairs Thermostat Mode"
+  number : 129
+  state  : 0 
+- type   : "thermostat_fan"
+  name   : "Main Floor Thermostat Fan"
+  number : 1
+  state  : 0 
+- type   : "thermostat_fan"
+  name   : "Upstairs Thermostat Fan"
+  number : 129
+  state  : 0 
+- type   : "thermostat_temp"
+  name   : "Main Floor Thermostat Temperature"
+  number : 1
+  state  : 69
+- type   : "thermostat_temp"
+  name   : "Upstairs Thermostat Temperature"
+  number : 129
+  state  : 69
+- type   : "thermostat_set_temp"
+  name   : "Main Floor Thermostat Set Temperature"
+  number : 1
+  state  : 69
+- type   : "thermostat_set_temp"
+  name   : "Upstairs Thermostat Set Temperature"
+  number : 129
+  state  : 69
+- type   : "lights_level"
+  name   : "Main Floor Dimmable Light"
+  number : 1
+  state  : 0
+- type   : "lights_level"
+  name   : "Main Floor Dimmable Light"
+  number : 2
+  state  : 0
+- type   : "lights_level"
+  name   : "Main Floor Dimmable Light"
+  number : 3
+  state  : 0
+- type   : "lights_level"
+  name   : "Upstairs Dimmable Light"
+  number : 129
+  state  : 0
+- type   : "lights_level"
+  name   : "Upstairs Dimmable Light"
+  number : 130
+  state  : 0
+- type   : "lights_level"
+  name   : "Upstairs Dimmable Light"
+  number : 131
+  state  : 0
+- type   : "lights_level"
+  name   : "Upstairs Dimmable Light"
+  number : 132
+  state  : 0
+- type   : "lights_level"
+  name   : "Upstairs Dimmable Light"
+  number : 133
+  state  : 0
+- type   : "lock_state"
+  name   : "Front Door Lock"
+  number : 1
+  state  : 0
+- type   : "lock_state"
+  name   : "Back Door Lock"
+  number : 1
+  state  : 0
+- type   : "lock_state"
+  name   : "Garage Door Lock"
+  number : 1
+  state  : 0
+- type   : "door_window_sensor"
+  name   : "Main Floor Door/Window Sensor"
+  number : 1
+  state  : 0
+- type   : "door_window_sensor"
+  name   : "Main Floor Door/Window Sensor"
+  number : 2
+  state  : 0
+- type   : "door_window_sensor"
+  name   : "Main Floor Door/Window Sensor"
+  number : 3
+  state  : 0
+- type   : "door_window_sensor"
+  name   : "Upstairs Door/Window Sensor"
+  number : 129
+  state  : 0
+- type   : "door_window_sensor"
+  name   : "Upstairs Door/Window Sensor"
+  number : 130
+  state  : 0
+- type   : "motion_sensor"
+  name   : "Main Floor Motion Sensor"
+  number : 1
+  state  : 0
+- type   : "door_window_sensor"
+  name   : "Upstairs Motion Sensor"
+  number : 129
+  state  : 0

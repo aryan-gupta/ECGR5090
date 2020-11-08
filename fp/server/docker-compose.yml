@@ -1,0 +1,41 @@
+version: '3'
+services:
+  php-apache:
+    build:
+      context: ./php-apache
+    ports:
+      - 8080:80
+    volumes:
+      - ./webroot:/var/www/html
+    links:
+      - 'mariadb'
+    secrets:
+      - db_phpadmin_password
+      - app_test_user_password
+      - default_sensors
+  
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - 3206:3206
+    volumes:
+      - ./sql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_USER: phpadmin
+      MYSQL_PASSWORD_FILE: /run/secrets/db_phpadmin_password
+    secrets:
+      - db_phpadmin_password
+      - db_root_password
+
+
+secrets:
+  db_root_password:
+    file: ./../secrets/db_root_password.txt
+  db_phpadmin_password:
+    file: ./../secrets/db_phpadmin_password.txt
+  app_test_user_password:
+    file: ./../secrets/app_test_user_password.txt
+  # This technically isn't a secret but still want to pass it in
+  default_sensors:
+    file: ./../default_sensors.yaml

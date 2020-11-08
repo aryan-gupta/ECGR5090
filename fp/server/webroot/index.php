@@ -1,0 +1,15 @@
+<?php
+    require_once 'session.php';
+?>
+
+<html>
+<body>
+
+<form action="login.php" method="post">
+User: <input type="text" name="username"><br>
+Password: <input type="text" name="password"><br>
+<input type="submit">
+</form>
+
+</body>
+</html>
