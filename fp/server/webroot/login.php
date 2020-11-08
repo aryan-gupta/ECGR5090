@@ -57,7 +57,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt->fetch();
 
-        if (password_verify($user_password, $hash)) {
+        if (password_verify($password, $hash)) {
+            $_SESSION["username"] = $username;
+            $_SESSION["sql_uid"] = $id;
+
             $sid = session_id();
 
             $jsonReply->session = array(
@@ -70,6 +73,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             echo json_encode($jsonReply);
 
+            exit();
+        } else {
+            $jsonReply->error = array(
+                'type' => "IncorrectPassword",
+                'details' => "That is the incorrect password for the user $username"
+            );
+            
+            echo json_encode($jsonReply);
+    
             exit();
         }
     }
