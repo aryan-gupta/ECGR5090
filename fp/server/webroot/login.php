@@ -33,6 +33,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    if (isset($_POST["register"]) && $_POST["register"] == "yes") {
+        $jsonReply->error = array(
+            'type' => "FeatureNotSupported",
+            'details' => "Registration for this app is currently not supported"
+        );
+        
+        echo json_encode($jsonReply);
+
+        exit();
+    }
+
     $username = $_POST["username"];
     $password = $_POST["password"];
 

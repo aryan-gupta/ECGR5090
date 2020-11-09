@@ -37,7 +37,13 @@ if (!isset($_SESSION["username"])) {
     <form action="login.php" method="post">
         <input type="text" name="username" placeholder="Username"><br/>
         <input type="text" name="password" placeholder="Password" id="password"><br/>
-        <input type="checkbox" onclick="togglePasswordVisibility()" checked>Show Password <br/>
+        <input type="checkbox" onclick="togglePasswordVisibility()" checked>Show Password<br/>
+        <div>
+            <input type="checkbox" name="register" value="yes">Register<br/>
+            <div class="reveal-if-active">
+                <input type="text" name="email" placeholder="Email"><br/>
+            </div>
+        </div>
         <input type="submit">
     </form>';
 } else {
