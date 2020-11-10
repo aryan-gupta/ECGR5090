@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,16 +24,22 @@ public class AlertsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        alertsViewModel =
-                new ViewModelProvider(this).get(AlertsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_alerts, container, false);
-        final TextView textView = root.findViewById(R.id.text_alert);
-        alertsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+
+        String[] mobileArray = {"Android","IPhone","WindowsMobile","Blackberry",
+                "WebOS","Ubuntu","Windows7","Max OS X"};
+        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), R.layout.sensors_listview, mobileArray);
+
+        ListView listView = (ListView) root.findViewById(R.id.alerts_alert_list);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getActivity(), "Stop Clicking me", Toast.LENGTH_SHORT).show();
             }
         });
+
         return root;
     }
 }
