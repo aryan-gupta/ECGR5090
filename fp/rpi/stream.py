@@ -3,8 +3,6 @@ from flask import Flask, render_template, Response
 from imutils.video import VideoStream
 import numpy as np
 import cv2
-import socket 
-import io
 import time
 import imutils
 
@@ -43,12 +41,11 @@ class MotionDetector:
 
 		return (thresh, (minX, minY, maxX, maxY))
 
-
-
-
-
+# Create Flask application
 app = Flask(__name__) 
 
+# start video camera and wait for it
+# to initialize
 vc = cv2.VideoCapture(0)
 time.sleep(2.0)
 
@@ -61,18 +58,21 @@ if not ret:
 	print("Can't receive frame (stream end?). Exiting ...")
 	exit()
 
+# read one frame and initialize the motion detector
+# from this frame
 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 detector = MotionDetector(frame)
 
 def gen(): 
+	"""Video streaming generator function.""" 
+
 	global vc
 
-	"""Video streaming generator function.""" 
 	while True: 
 		rval, frame = vc.read()
 		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-		if not ret:
+		if not rval:
 			print("Can't receive frame (stream end?). Exiting ...")
 			break
 
