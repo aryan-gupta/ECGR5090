@@ -48,4 +48,4 @@ secrets:
     file: ./../secrets/app_test_user_password.txt
   # This technically isn't a secret but still want to pass it in
   default_sensors:
-    file: ./../default_sensors.yaml
+    file: ./default_sensors.yaml
