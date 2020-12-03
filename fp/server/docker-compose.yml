@@ -27,6 +27,16 @@ services:
     secrets:
       - db_phpadmin_password
       - db_root_password
+      
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - 8082:80
+    environment:
+      PMA_HOST: mariadb
+    secrets:
+      - db_root_password
+
 
 
 secrets:

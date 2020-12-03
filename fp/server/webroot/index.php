@@ -74,7 +74,7 @@ if (!isset($_SESSION["username"])) {
         <div>
             <input type="radio" name="opcode" value="request" id="request-opcode-input">Request
             <div class="reveal-if-active">
-                <input type="text" name="sensor_id[]" placeholder="Sensor ID">
+                <input type="text" name="request_sensor_id" placeholder="Sensor ID">
                 <br/>
             </div>
         </div>';
@@ -83,7 +83,7 @@ if (!isset($_SESSION["username"])) {
         <div>
             <input type="radio" name="opcode" value="update" id="update-opcode-input">Update
             <div class="reveal-if-active">
-                <input type="text" name="sensor_id[]" placeholder="Sensor ID">
+                <input type="text" name="update_sensor_id" placeholder="Sensor ID">
                 <input type="text" name="state" placeholder="State">
                 <br/>
             </div>

@@ -103,13 +103,8 @@ function search_sensor(&$conn, $type, $name, $number) {
     return json_encode($rows);
 }
 
-$post = null;
-if (isset($_POST["json"])) {
-    $post = json_decode($_POST["json"]);
-} else {
-    $post = $_POST;
-}
 
+$post = $_POST;
 $opcode = $post["opcode"];
 
 /// @todo CLEAN THE INPUTS SQL INJECTION MUCH?????
@@ -126,18 +121,19 @@ switch ($opcode) {
     /// @TODO because forms have multiple inputs with the same name,
     ///       this needs to be updated so it works with JSON or with POST 
     case "request":
-        echo get_sensor_dump_by_id($conn, $post["sensor_id"][0]);
+        echo get_sensor_dump_by_id($conn, $post["request_sensor_id"]);
     break;
 
     case "update":
-        echo update_sensor_value($conn, $post["sensor_id"][1], $post["state"]);
+        echo update_sensor_value($conn, $post["update_sensor_id"], $post["state"]);
     break;
 
     default:
         $jsonReply = new stdClass();
         $jsonReply->error = array(
             'type' => "IncorrectOpcode",
-            'details' => "Opcode $opcode is not supported"
+            'details' => "Opcode $opcode is not supported",
+            'post' => $post
         );
         
         echo json_encode($jsonReply);

@@ -1,80 +1,28 @@
 #!/usr/bin/python3
 
 import requests
-import multiprocessing
 import json
 import threading
 import signal
 import sys
-import socketserver
+import time
 
 login_url = "http://192.168.1.19:8080/login.php"
+sensor_url = "http://192.168.1.19:8080/sensors.php"
 username = 'test'
 password_file = "../secrets/app_test_user_password.txt"
-local_server_addr = address = ('localhost', 6000)
 
+class SensorPoll:
+    def __init__(self, client):
+        self.client = client
 
-client = None
-server = None
-
-
-class ServerConnectionHandler(socketserver.StreamRequestHandler):
-    def handle_update(msg):
-        obj = {}
-        obj['opcode'] = 'update'
-        obj['sensor_id'] = msg['id']
-        obj['state'] = msg['state']
-
-    def handle_message(msg):
-        pass
-
-    def handle(self):
-        data = self.rfile.readline().strip()
-        msg_len = int(data.decode())
-
-        data = b''
-        len_recv = 0
-        while len_recv < msg_len:
-            data += self.rfile.read(1024)
-            len_recv = len(data)
-
-        msg = data.decode()
-        msgjson = json.loads(msg)
-        
-        reqtype = msgjson['type']
-        reqmsg = msgjson['message']
-
-        if reqtype == 'update':
-            handle_update(reqauth, reqmsg)
-
-
-
-# class Server:
-#     def __init__(self):
-#         self.connections = {}
-
-
-#     def thread_target(self):
-#         with Listener(local_con) as listener:
-#             with listener.accept() as conn:
-#                 while True:
-#                     data = handle_connection(conn)
-#                     reply = handle_data(data)
-
-#         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock
-#             s.bind(local_server_addr)
-#             s.listen(1)
-
-#             conn, addr = s.accept()
-#             print 'Connection address:', addr
-#             while 1:
-#                 data = conn.recv(BUFFER_SIZE)
-#                 if not data: break
-#                 print "received data:", data
-#                 conn.send(data)  # echo
-#             conn.close()
-
-
+    def run(self, state):
+        data = {}
+        data["opcode"] = "update"
+        data["update_sensor_id"] = 4
+        data["state"] = state
+        print(json.dumps(data))
+        client.send( data )
 
 class Client:
     def __init__(self, sleep=1):
@@ -83,7 +31,7 @@ class Client:
         self.email = None
         self.uid = None
         
-        self.mutex = threading.Lock()
+        self.cv = threading.Condition()
         self.next = None
 
         self.sleep = sleep
@@ -101,11 +49,16 @@ class Client:
     def join(self):
         self.thread.join()
 
+    def notify(self):
+        with self.cv:
+            self.cv.notify()
+
     def stop(self):
         self.exitThread.set()
 
     def stopJoin(self):
         self.stop()
+        self.notify()
         self.join()
 
     def login(self):
@@ -125,34 +78,48 @@ class Client:
         print("Login Success. uid: xxx%s" % self.session_id[-6:])
 
     def send(self, json):
-        updated = False
-        while not updated:
-            with self.mutex:
+        while True:
+            with self.cv:
                 if self.next is None:
                     self.next = json
-                    updated = True
+                    self.cv.notify()
+                    break
 
     def threadTarget(self):
-        nextSend = None
-
-        with self.mutex:
-            if self.next is not None:
-                nextSend = self.next
-                self.next = None
-
         while not self.exitThread.is_set():
-            print("Hola")
-        
+            nextSend = None
+
+            while not nextSend:
+                with self.cv:
+                    self.cv.wait()
+                    nextSend = self.next
+                    self.next = None
+
+                    if self.exitThread.is_set():
+                        return
+
+            reply = self.session.post(sensor_url, data=nextSend)
+            replyjson = json.loads(reply.text)
+
+            if "error" in replyjson.keys():
+                print(reply.text)
+            
 
 def signal_handler(sig, frame):
-    #client.stopJoin()
-    server.stopJoin()
+    client.stopJoin()
     sys.exit(0)
 
 if __name__ == '__main__':
-    #signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
 
-    #client = Client()
-    server = socketserver.ThreadingTCPServer(local_server_addr, ServerConnectionHandler)
-    with server:
-        server.serve_forever()
+    client = Client()
+    sensors = SensorPoll(client)
+
+    while True:
+        sensors.run(-1)
+        time.sleep(3)
+        sensors.run(0)
+        time.sleep(3)
+        sensors.run(1)
+        time.sleep(3)
+
