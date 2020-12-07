@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # import required modules
 from flask import Flask, render_template, Response 
 from imutils.video import VideoStream
