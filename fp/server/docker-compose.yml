@@ -7,8 +7,6 @@ services:
       - 8080:80
     volumes:
       - ./webroot:/var/www/html
-    links:
-      - 'mariadb'
     secrets:
       - db_phpadmin_password
       - app_test_user_password
@@ -36,6 +34,18 @@ services:
       PMA_HOST: mariadb
     secrets:
       - db_root_password
+
+  python-svr:
+    build:
+      context: ./python-server
+    ports:
+      - 9080:9080
+    environment:
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./server.py:/run/server.py
+    secrets:
+      - db_phpadmin_password
 
 
 

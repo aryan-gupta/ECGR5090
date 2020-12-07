@@ -7,6 +7,10 @@ import signal
 import sys
 import time
 import socket
+import os
+
+if os.uname()[4][:3] == 'arm':
+    import RPi.GPIO as GPIO
 
 login_url = "http://192.168.1.19:8080/login.php"
 sensor_url = "http://192.168.1.19:8080/sensors.php"
@@ -17,14 +21,36 @@ password_file = "../secrets/app_test_user_password.txt"
 class SensorPoll:
     def __init__(self, client):
         self.client = client
+        self.state = 0
 
-    def run(self, state):
-        data = {}
-        data["opcode"] = "update"
-        data["update_sensor_id"] = 4
-        data["state"] = state
-        # print(json.dumps(data))
-        client.send( data )
+        if os.uname()[4][:3] == 'arm':
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(4, GPIO.IN)
+            GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+    def run(self, state=0):
+        if os.uname()[4][:3] == 'arm':
+            while True:
+                time.sleep(1)
+                state = GPIO.input(4)
+                if state == self.state:
+                    continue
+                self.state = state
+                print("Button State Changed")
+                data = {}
+                data["opcode"] = "update"
+                data["update_sensor_id"] = 4
+                data["state"] = self.state
+                client.send( data )
+        else:
+            data = {}
+            data["opcode"] = "update"
+            data["update_sensor_id"] = 4
+            data["state"] = state
+            # print(json.dumps(data))
+            client.send( data )
+            
+
 
 class Client:
     def __init__(self, sleep=1):
@@ -51,8 +77,6 @@ class Client:
         self.threadRecv = threading.Thread(target=self.threadTargetRecv)
         self.threadRecv.start()
     
-
-
     def __read_password():
         with open(password_file, "r") as f:
             return f.read()
@@ -178,10 +202,11 @@ class Client:
                     print("Client thread exiting")
                     return
 
+            print("Thread recived data to send. %s" % json.dumps(nextSend))
             self.socket_send(nextSend)
 
     def threadTargetRecv(self):
-        print("Client Send thread started")
+        print("Client Recv thread started")
 
         while not self.exitThread.is_set():
             replyjson = self.socket_receive()
@@ -189,7 +214,6 @@ class Client:
 
             if 'error' in replyjson and replyjson['error'] is not None:
                 print(reply.text)
-
 
 def signal_handler(sig, frame):
     client.stopJoin()
@@ -210,4 +234,7 @@ if __name__ == '__main__':
         time.sleep(3)
         sensors.run(1)
         time.sleep(3)
+
+    while True:
+        time.sleep(5)
 

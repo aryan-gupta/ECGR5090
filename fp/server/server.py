@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import requests
-import multiprocessing
 import json
 import threading
 import signal
@@ -9,17 +8,18 @@ import sys
 import socketserver
 import secrets
 import mysql.connector
+import subprocess
 
-login_url = "http://192.168.1.19:8080/login.php"
+login_url = "http://php-apache/login.php"
 username = 'test'
-password_file = "../secrets/app_test_user_password.txt"
 database_username = "phpadmin"
-database_passwd_file = f"../secrets/db_{database_username}_password.txt"
+database_passwd_file = f"/run/secrets/db_{database_username}_password"
 local_server_addr = address = ('0.0.0.0', 9080)
+db_ipaddress = 'mariadb' # subprocess.check_output('docker inspect -f \'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\' server_mariadb_1', shell=True)
 
 server = None
 
-auth_codes = []
+auth_codes = {}
 
 def cat(filename):
     f = open(filename,mode='r')
@@ -27,15 +27,6 @@ def cat(filename):
     f.close()
     return s #.strip('\n\t ')
 
-
-db = mysql.connector.connect(
-    host="172.18.0.2",
-    user=database_username,
-    password=cat(database_passwd_file),
-    database="sense49"
-)
-
-cursor = db.cursor()
 
 class ServerConnectionHandler(socketserver.StreamRequestHandler):
     def handle_login(self, data):
@@ -48,7 +39,7 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
         token = None
         if 'error' not in replyjson or replyjson['error'] is None:
             token = secrets.token_hex(16)
-            auth_codes.append(token)
+            auth_codes[self] = { 'connection': self, 'user': replyjson, 'token': token }
             replyjson['token'] = token
 
             print("Login Success: ", data)
@@ -56,13 +47,28 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
         return replyjson
 
     def handle_update(self, msg):
+        global db_ipaddress, database_username, database_passwd_file
+
+        db = mysql.connector.connect(
+            host=db_ipaddress,
+            user=database_username,
+            password=cat(database_passwd_file),
+            database="sense49"
+        )
+
+        cursor = db.cursor()
+
         sql = "UPDATE sensors SET state=%s WHERE id=%s"
+        # f"UPDATE sensors SET state={msg['state']} WHERE id={msg['update_sensor_id']}"
+        # print(sql)
         val = [ msg['state'], msg['update_sensor_id'] ]
         cursor.execute(sql, val)
+        print("Updated")
 
-        sql = "SELECT id,userid,type,name,number,state FROM sensors WHERE id=%s"
+        sql = "SELECT * FROM sensors WHERE id=%s" # id,userid,type,name,number,state
         val = [ msg['update_sensor_id'] ]
         cursor.execute(sql, val)
+        print("Selected")
         result = cursor.fetchall()[0]
 
         jsonreply = {}
@@ -74,6 +80,13 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
         jsonreply['state']  = result[5]
 
         return jsonreply
+
+    def handle_device(self, msg):
+        # if msg['update_sensor_id']
+        jsonmsg = json.dumps(msg)
+        print("Replying: %s" % jsonmsg)
+        msg = str(len(jsonmsg)) + '\n' + jsonmsg
+        self.wfile.write(msg.encode())
 
     def handle(self):
         print("Connection Received")
@@ -98,6 +111,11 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
                 replyjson = self.handle_login(msgjson)
             if reqtype == 'update':
                 replyjson = self.handle_update(msgjson)
+            if reqtype == 'device':
+                print("Recived Device update.")
+                for k in auth_codes.keys():
+                    k.handle_device(msgjson)
+                return
 
             jsonmsg = json.dumps(replyjson)
             print("Replying: %s" % jsonmsg)

@@ -59,19 +59,71 @@ function get_sensor_dump_by_id(&$conn, $sen_id) {
 
 
 function update_sensor_value(&$conn, $sen_id, $state) {
+    // Create connection
+    global $db_servername,$db_username,$db_password,$db_name,$_SESSION;
+
+    error_log("Creating Connection");
+    $localconn = new mysqli($db_servername,$db_username,$db_password);
+
+    // Check connection
+    if ($localconn->connect_error) {
+        die("Connection failed: " . $localconn->connect_error);
+    }
+
+    // check for database
+    error_log("Selecting database");
+    $db_selected = $localconn->select_db($db_name);
+    if (!$db_selected) {
+        die("Failed");
+    }
+
+
     $sql_uid = $_SESSION['sql_uid'];
 
-    $stmt = $conn->prepare("UPDATE sensors SET state=? WHERE userid=? AND id=?");
+    error_log("Preparing Statement");
+    $stmt = $localconn->prepare("UPDATE sensors SET state=? WHERE userid=? AND id=?");
     if (!$stmt) {
         die('statement creation failed failed: ' . $stmt->error);
     }
-
+    
     $stmt->bind_param('iii', $state, $sql_uid, $sen_id);
+    error_log("Executing statement");
     if (!$stmt->execute()) {
         die('execute() failed: ' . $stmt->error);
     }
 
-    return get_sensor_dump_by_id($conn, $sen_id);
+    $ret = get_sensor_dump_by_id($localconn, $sen_id);
+    return $ret;
+}
+
+function update_devices($ret) {
+    $reply = json_decode($ret, true);
+    $reply['opcode'] = 'device';
+    $reply = json_encode($reply);
+
+    error_reporting(E_ALL);
+    $address = "192.168.1.19";
+    $service_port = 9080;
+
+    error_log("Socket creation OK");
+
+    /* Create a TCP/IP socket. */
+    $socket = socket_create(AF_INET, SOCK_STREAM, 0) or die("Could not create socket\n");
+    if ($socket === false) {
+        echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
+    } else {
+        error_log("Socket creation OK asdasd");
+    }
+
+    $result = socket_connect($socket, $address, $service_port);
+    if ($result === false) {
+        echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
+    }
+
+    $msg = strval(strlen($reply)) . "\n" . $reply;
+
+    socket_write($socket, $msg, strlen($msg));
+    socket_close($socket);
 }
 
 function search_sensor(&$conn, $type, $name, $number) {
@@ -125,7 +177,9 @@ switch ($opcode) {
     break;
 
     case "update":
-        echo update_sensor_value($conn, $post["update_sensor_id"], $post["state"]);
+        $ret = update_sensor_value($conn, $post["update_sensor_id"], $post["state"]);
+        update_devices($ret);
+        echo $ret;
     break;
 
     default:
