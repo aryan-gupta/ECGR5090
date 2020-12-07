@@ -27,7 +27,7 @@ class SensorPoll:
         client.send( data )
 
 class Client:
-    def __init__(self, method='socket', sleep=1):
+    def __init__(self, sleep=1):
         self.session_id = None
         self.token = None
         self.email = None
@@ -38,20 +38,21 @@ class Client:
 
         self.sleep = sleep
 
-        if method == 'post':
-            self.session = requests.Session()
-            self.use_socket = False
-        elif method == 'socket':
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect(app_svr)
-            self.use_socket = True
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.connect(app_svr)
 
         self.login()
 
         self.exitThread = threading.Event()
-        self.thread = threading.Thread(target=self.threadTarget)
-        self.thread.start()
+
+        self.threadSend = threading.Thread(target=self.threadTargetSend)
+        self.threadSend.start()
+        
+        self.threadRecv = threading.Thread(target=self.threadTargetRecv)
+        self.threadRecv.start()
     
+
+
     def __read_password():
         with open(password_file, "r") as f:
             return f.read()
@@ -75,41 +76,36 @@ class Client:
         print("Logging in")
         password = Client.__read_password()
         data = { 'username': username, 'password': password }
+
+        # Send message
+        data['opcode'] = 'login'
+        jsonmsg = json.dumps(data)
+        msg = str(len(jsonmsg)) + '\n' + jsonmsg
+        self.socket.sendall(msg.encode())
+
+        # First receive the length
+        reply = ''
+        msg_len = None
+        while not msg_len:
+            reply += self.socket.recv(1024).decode()
+
+            reply_split = reply.split('\n', 1)
+            if len(reply_split) != 2:
+                continue
+            else:
+                len_str = reply_split[0]
+                msg_len = int(len_str)
+                reply = reply_split[1]
         
-        if self.use_socket:
-            # Send message
-            data['opcode'] = 'login'
-            jsonmsg = json.dumps(data)
-            msg = str(len(jsonmsg)) + '\n' + jsonmsg
-            self.socket.sendall(msg.encode())
 
-            # First receive the length
-            reply = ''
-            msg_len = None
-            while not msg_len:
-                reply += self.socket.recv(1024).decode()
-
-                reply_split = reply.split('\n', 1)
-                if len(reply_split) != 2:
-                    continue
-                else:
-                    len_str = reply_split[0]
-                    msg_len = int(len_str)
-                    reply = reply_split[1]
-            
-
-            # Then receive the json
+        # Then receive the json
+        len_recv = len(reply)
+        while len_recv < msg_len:
+            read_rem = msg_len - len_recv
+            reply += self.socket.recv(read_rem).decode()
             len_recv = len(reply)
-            while len_recv < msg_len:
-                read_rem = msg_len - len_recv
-                reply += self.socket.recv(read_rem).decode()
-                len_recv = len(reply)
 
-            replyjson = json.loads(reply)
-
-        else:
-            reply = self.session.post(login_url, data=data)
-            replyjson = json.loads(reply.text)
+        replyjson = json.loads(reply)
 
         print(replyjson)
 
@@ -133,18 +129,14 @@ class Client:
                     self.cv.notify()
                     break
 
-    def post_method(self, data):
-        reply = self.session.post(sensor_url, data=data)
-        replyjson = json.loads(reply.text)
-        return replyjson
-    
-    def socket_method(self, data):
+    def socket_send(self, data):
         # Send message
         data['token'] = self.token
         jsonmsg = json.dumps(data)
         msg = str(len(jsonmsg)) + '\n' + jsonmsg
         self.socket.sendall(msg.encode())
 
+    def socket_receive(self):
         # First receive the length
         reply = ''
         msg_len = None
@@ -169,8 +161,8 @@ class Client:
         replyjson = json.loads(reply)
         return replyjson
 
-    def threadTarget(self):
-        print("Client thread started")
+    def threadTargetSend(self):
+        print("Client Send thread started")
 
         while not self.exitThread.is_set():
             nextSend = None
@@ -186,12 +178,13 @@ class Client:
                     print("Client thread exiting")
                     return
 
-            replyjson = {}
-            if self.use_socket:
-                replyjson = self.socket_method(nextSend)
-            else:
-                replyjson = self.post_method(nextSend)
+            self.socket_send(nextSend)
 
+    def threadTargetRecv(self):
+        print("Client Send thread started")
+
+        while not self.exitThread.is_set():
+            replyjson = self.socket_receive()
             print("Recived reply: ", json.dumps(replyjson))
 
             if 'error' in replyjson and replyjson['error'] is not None:
