@@ -19,6 +19,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 public class MainLoginPageActivity extends AppCompatActivity {
 
@@ -68,6 +73,36 @@ public class MainLoginPageActivity extends AppCompatActivity {
 //        String reply = everything.toString();
 //
 //        Log.i("sense49", reply);
+        try{
+            String link="http://myphpmysqlweb.hostei.com/loginpost.php";
+            String data  = URLEncoder.encode("username", "UTF-8") + "=" +
+                    URLEncoder.encode(username, "UTF-8");
+            data += "&" + URLEncoder.encode("password", "UTF-8") + "=" +
+                    URLEncoder.encode(password, "UTF-8");
+
+            URL url = new URL(link);
+            URLConnection conn = url.openConnection();
+
+            conn.setDoOutput(true);
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+            wr.write( data );
+            wr.flush();
+
+            BufferedReader reader = new BufferedReader(new
+                    InputStreamReader(conn.getInputStream()));
+
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+
+            // Read Server Response
+            while((line = reader.readLine()) != null) {
+                sb.append(line);
+                break;
+            }
+        } catch(Exception e){
+
+        }
 
         setResult(Activity.RESULT_OK, null);
         finish();
