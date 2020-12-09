@@ -77,7 +77,7 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
         # print(sql)
         val = [ msg['state'], msg['update_sensor_id'] ]
         cursor.execute(sql, val)
-        mydb.commit()
+        db.commit()
         print("Updated")
 
         # read it back

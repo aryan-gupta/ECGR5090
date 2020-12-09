@@ -5,7 +5,7 @@ This project is split into 3 devices
  - The Data Center Server
  - The IOT Raspberry Pi (rpi)
 
-The devices are further split into more parts depending on the work it performs
+The devices are further split into more parts depending on the work it performs.
 
 ## The Android App
 This is the most lacking part of the project. Since this is the most lacking. There isnt much to say here. Please view the video for more info. 
