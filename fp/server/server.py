@@ -63,6 +63,7 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
         # print(sql)
         val = [ msg['state'], msg['update_sensor_id'] ]
         cursor.execute(sql, val)
+        mydb.commit()
         print("Updated")
 
         sql = "SELECT * FROM sensors WHERE id=%s" # id,userid,type,name,number,state
