@@ -59,29 +59,10 @@ function get_sensor_dump_by_id(&$conn, $sen_id) {
 
 
 function update_sensor_value(&$conn, $sen_id, $state) {
-    // Create connection
-    global $db_servername,$db_username,$db_password,$db_name,$_SESSION;
-
-    error_log("Creating Connection");
-    $localconn = new mysqli($db_servername,$db_username,$db_password);
-
-    // Check connection
-    if ($localconn->connect_error) {
-        die("Connection failed: " . $localconn->connect_error);
-    }
-
-    // check for database
-    error_log("Selecting database");
-    $db_selected = $localconn->select_db($db_name);
-    if (!$db_selected) {
-        die("Failed");
-    }
-
-
     $sql_uid = $_SESSION['sql_uid'];
 
     error_log("Preparing Statement");
-    $stmt = $localconn->prepare("UPDATE sensors SET state=? WHERE userid=? AND id=?");
+    $stmt = $conn->prepare("UPDATE sensors SET state=? WHERE userid=? AND id=?");
     if (!$stmt) {
         die('statement creation failed failed: ' . $stmt->error);
     }
@@ -92,7 +73,7 @@ function update_sensor_value(&$conn, $sen_id, $state) {
         die('execute() failed: ' . $stmt->error);
     }
 
-    $ret = get_sensor_dump_by_id($localconn, $sen_id);
+    $ret = get_sensor_dump_by_id($conn, $sen_id);
     return $ret;
 }
 
