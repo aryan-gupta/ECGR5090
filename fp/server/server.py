@@ -10,6 +10,7 @@ import secrets
 import mysql.connector
 import subprocess
 
+# constants used in this server application
 login_url = "http://php-apache/login.php"
 username = 'test'
 database_username = "phpadmin"
@@ -17,10 +18,16 @@ database_passwd_file = f"/run/secrets/db_{database_username}_password"
 local_server_addr = address = ('0.0.0.0', 9080)
 db_ipaddress = 'mariadb' # subprocess.check_output('docker inspect -f \'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\' server_mariadb_1', shell=True)
 
+# reference to the server
 server = None
 
+# current authentication codes that are successfully
+# logged into the server. If a connection is established
+# that doesnt have a auth present in this var or doesnt
+# start a login flow, the connection is closed
 auth_codes = {}
 
+# cat's a file (get content of file as single string)
 def cat(filename):
     f = open(filename,mode='r')
     s = f.read()
@@ -28,7 +35,10 @@ def cat(filename):
     return s #.strip('\n\t ')
 
 
+# a connection handler for the socket server that handles the connections 
+# from the clients
 class ServerConnectionHandler(socketserver.StreamRequestHandler):
+    # handles a login flow. Creates a token and returns the user and session info
     def handle_login(self, data):
         print("Login Attempt: ", data)
 
@@ -46,9 +56,12 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
 
         return replyjson
 
+    # handles an update from the rpi devices to the SQL server
     def handle_update(self, msg):
         global db_ipaddress, database_username, database_passwd_file
 
+        # according to https://stackoverflow.com/questions/45636492
+        # database connects shouldnt span multiple threads
         db = mysql.connector.connect(
             host=db_ipaddress,
             user=database_username,
@@ -58,6 +71,7 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
 
         cursor = db.cursor()
 
+        # update the database
         sql = "UPDATE sensors SET state=%s WHERE id=%s"
         # f"UPDATE sensors SET state={msg['state']} WHERE id={msg['update_sensor_id']}"
         # print(sql)
@@ -66,12 +80,14 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
         mydb.commit()
         print("Updated")
 
+        # read it back
         sql = "SELECT * FROM sensors WHERE id=%s" # id,userid,type,name,number,state
         val = [ msg['update_sensor_id'] ]
         cursor.execute(sql, val)
         print("Selected")
         result = cursor.fetchall()[0]
 
+        # unpack the data
         jsonreply = {}
         jsonreply['id']     = result[0]
         jsonreply['userid'] = result[1]
@@ -82,6 +98,7 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
 
         return jsonreply
 
+    # handles an update of the device from the php/app
     def handle_device(self, msg):
         # if msg['update_sensor_id']
         jsonmsg = json.dumps(msg)
@@ -89,12 +106,16 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
         msg = str(len(jsonmsg)) + '\n' + jsonmsg
         self.wfile.write(msg.encode())
 
+    # handles a connection. Since it is a StreamRequestHandler, all
+    # recv are stores in the IOBuffer rfile
     def handle(self):
         print("Connection Received")
         while True:
+            # read the length
             data = self.rfile.readline().strip()
             msg_len = int(data.decode())
 
+            # read the rest of the data/json
             data = b''
             len_recv = 0
             while len_recv < msg_len:
@@ -102,10 +123,12 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
                 data += self.rfile.read(read_rem)
                 len_recv = len(data)
 
+            # decode json
             msg = data.decode()
             print("JSON Recived: %s" % msg)
             msgjson = json.loads(msg)
             
+            # handle the json
             reqtype = msgjson['opcode']
             replyjson = None
             if reqtype == 'login':
@@ -118,12 +141,13 @@ class ServerConnectionHandler(socketserver.StreamRequestHandler):
                     k.handle_device(msgjson)
                 return
 
+            # send the reply
             jsonmsg = json.dumps(replyjson)
             print("Replying: %s" % jsonmsg)
             msg = str(len(jsonmsg)) + '\n' + jsonmsg
             self.wfile.write(msg.encode())
 
-
+# signal handler
 def signal_handler(sig, frame):
     server.stopJoin()
     sys.exit(0)

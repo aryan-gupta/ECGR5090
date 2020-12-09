@@ -7,10 +7,12 @@
 
 <?php
 
+// Double-check that we are POSTING
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // https://stackoverflow.com/questions/1434368
     $jsonReply = new stdClass();
 
+    // if the username is empty error out
     if (empty($_POST["username"])) {
         $jsonReply->error = array(
             'type' => "EmptyValue",
@@ -22,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // if the password is empty error out
     if (empty($_POST["password"])) {
         $jsonReply->error = array(
             'type' => "EmptyValue",
@@ -33,6 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // if the user wants to register then error cause we have yet to
+    // implement it
     if (isset($_POST["register"]) && $_POST["register"] == "yes") {
         $jsonReply->error = array(
             'type' => "FeatureNotSupported",
@@ -44,16 +49,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // extract the username and password
     $username = $_POST["username"];
     $password = $_POST["password"];
 
+    # get the user
     if ($stmt = $conn->prepare("SELECT id,email,password FROM users WHERE username=? LIMIT 1")) {
-        
+
         $stmt->bind_param('s', $username);
         if (!$stmt->execute()) {
             die('execute() failed: ' . $stmt->error);
         }
 
+        # check that the user actually exists
         $stmt->store_result();
         if ($stmt->num_rows != 1) {
             $jsonReply->error = array(
@@ -70,6 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt->fetch();
 
+        # check the password. if the password is incorrect then error out
         if (password_verify($password, $hash)) {
             $_SESSION["username"] = $username;
             $_SESSION["sql_uid"] = $id;
@@ -84,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $jsonReply->error = null;
 
+            # echo the success json
             echo json_encode($jsonReply);
 
             exit();
@@ -93,6 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'details' => "That is the incorrect password for the user $username"
             );
             
+            # echo the error json
             echo json_encode($jsonReply);
     
             exit();

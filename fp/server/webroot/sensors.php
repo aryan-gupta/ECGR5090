@@ -8,6 +8,7 @@
 function get_sensor_dump(&$conn) {
     $sql_uid = $_SESSION['sql_uid'];
 
+    // get sensor dump
     $stmt = $conn->prepare("SELECT * FROM sensors WHERE userid=?");
     if (!$stmt) {
         die('statement creation failed failed: ' . $stmt->error);
@@ -20,6 +21,7 @@ function get_sensor_dump(&$conn) {
 
     $result = $stmt->get_result();
 
+    // convert to json
     $rows = array();
     while($r = $result->fetch_assoc()) {
         $rows[] = $r;
@@ -32,6 +34,7 @@ function get_sensor_dump_by_id(&$conn, $sen_id) {
     $jsonReply = new stdClass();
     $sql_uid = $_SESSION['sql_uid'];
 
+    // get sensor
     $stmt = $conn->prepare("SELECT * FROM sensors WHERE userid=? AND id=? LIMIT 1");
     if (!$stmt) {
         die('statement creation failed failed: ' . $stmt->error);
@@ -42,6 +45,7 @@ function get_sensor_dump_by_id(&$conn, $sen_id) {
         die('execute() failed: ' . $stmt->error);
     }
 
+    // convert to json
     $result = $stmt->get_result();
     if ($result->num_rows < 1) {
         $jsonReply->error = array(
@@ -61,6 +65,7 @@ function get_sensor_dump_by_id(&$conn, $sen_id) {
 function update_sensor_value(&$conn, $sen_id, $state) {
     $sql_uid = $_SESSION['sql_uid'];
 
+    // update value
     error_log("Preparing Statement");
     $stmt = $conn->prepare("UPDATE sensors SET state=? WHERE userid=? AND id=?");
     if (!$stmt) {
@@ -73,16 +78,19 @@ function update_sensor_value(&$conn, $sen_id, $state) {
         die('execute() failed: ' . $stmt->error);
     }
 
+    // read the update back
     $ret = get_sensor_dump_by_id($conn, $sen_id);
     return $ret;
 }
 
 function update_devices($ret) {
+    // set the opcode to update device
     $reply = json_decode($ret, true);
     $reply['opcode'] = 'device';
     $reply = json_encode($reply);
 
     error_reporting(E_ALL);
+    # @todo parameterize this
     $address = "192.168.1.19";
     $service_port = 9080;
 
@@ -96,13 +104,16 @@ function update_devices($ret) {
         error_log("Socket creation OK asdasd");
     }
 
+    // connect to the app server
     $result = socket_connect($socket, $address, $service_port);
     if ($result === false) {
         echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
     }
 
+    // send the update device json call
     $msg = strval(strlen($reply)) . "\n" . $reply;
 
+    // close the socket
     socket_write($socket, $msg, strlen($msg));
     socket_close($socket);
 }
@@ -141,6 +152,7 @@ $post = $_POST;
 $opcode = $post["opcode"];
 
 /// @todo CLEAN THE INPUTS SQL INJECTION MUCH?????
+// handle the opcode the api requested
 switch ($opcode) {
     case "dump":
         echo get_sensor_dump($conn);

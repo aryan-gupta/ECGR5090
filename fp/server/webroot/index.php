@@ -22,6 +22,10 @@
 </head>
 <body>
 <?php
+// if the user has not logged in then show the login prompt. if not
+// then present a different set of options
+// there is a radial button for each opcode and mode options show up
+// when more info is needed for a opcode
 if (!isset($_SESSION["username"])) {
     echo '
     <script>

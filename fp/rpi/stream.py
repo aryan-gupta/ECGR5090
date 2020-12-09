@@ -8,14 +8,22 @@ import cv2
 import time
 import imutils
 
+# This class detects motion using an rolling weighted average
+# of the previous frames
 class MotionDetector:
 	def __init__(self, base, weight=0.25):
+		# weight of the most recent frame received
 		self.weight = weight
+		# create a clone of the first frame and use it as a reference
+		# for the next frame
 		self.background = base.copy().astype("float")
 
+	# updated the internal motion detection model
 	def update(self, image):
 		cv2.accumulateWeighted(image, self.background, self.weight)
 
+	# gets the motion detected using the internal model (average)
+	# and the current frame of the image
 	def get_motion_bounding_box(self, image, threshold=25):
 		# compute difference between new image and background
 		delta = cv2.absdiff(self.background.astype("uint8"), image)
@@ -65,6 +73,8 @@ if not ret:
 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 detector = MotionDetector(frame)
 
+# this is some metrics that I was using to test if it was
+# worth multithreading this app
 frame_num = 0
 gray_total = 0
 bbox_total = 0
@@ -81,26 +91,33 @@ def gen():
 		frame_num += 1
 		rval, frame = vc.read()
 		
+		# convert to grayscale
 		start_time = time.time()
 		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 		gray_total += (time.time() - start_time)
 
+		# @todo this should be moved before the previous set of 
+		# statements
 		if not rval:
 			print("Can't receive frame (stream end?). Exiting ...")
 			break
 
+		# get bounding boxes (detect motion)
 		start_time = time.time()
 		bounding_box = detector.get_motion_bounding_box(gray)
 		bbox_total += (time.time() - start_time)
 
+		# update the detection model
 		start_time = time.time()
 		detector.update(gray)
 		dete_total += (time.time() - start_time)
 
+		# draw the bounding boxes
 		if bounding_box is not None:
 			(thresh, (minX, minY, maxX, maxY)) = bounding_box
 			cv2.rectangle(frame, (minX, minY), (maxX, maxY), (0, 0, 255), 1)
 
+		# encode the image for the webserver
 		start_time = time.time()
 		(flag, encodedImage) = cv2.imencode(".jpg", frame) 
 		enco_total += (time.time() - start_time)
@@ -108,6 +125,7 @@ def gen():
 		if not flag:
 			continue
 
+		# yield the result of the generation
 		yield (b'--frame\r\n' 
 				b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n') 
 
